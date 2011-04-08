@@ -1,5 +1,5 @@
 class MonitorshipsController < ApplicationController
-  before_filter :login_required
+  before_filter :authenticate_user!
 
   cache_sweeper :monitorships_sweeper
 

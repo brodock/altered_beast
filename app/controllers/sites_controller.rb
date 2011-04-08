@@ -1,4 +1,5 @@
 class SitesController < ApplicationController
+  skip_before_filter :authenticate_user!
   before_filter :admin_required
   before_filter :find_site, :only => [:show, :edit, :update, :destroy]
 
@@ -37,9 +38,9 @@ class SitesController < ApplicationController
     respond_to do |format|
       if @site.save
         flash[:notice] = 'Site was successfully created.'
-        flash[:notice] += ' Please create your account.' unless logged_in?
+        flash[:notice] += ' Please create your account.' unless user_signed_in?
         format.html do
-          redirect_to logged_in? ? @site : signup_path
+          redirect_to user_signed_in? ? @site : new_user_registration_path
         end
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       else
@@ -71,9 +72,11 @@ class SitesController < ApplicationController
       format.xml  { head :ok }
     end
   end
-
-  def authorized?
-    @site.nil? or @site.new_record? # or current_site == Site.first
+  
+  def admin_required
+    unless admin? || @site.nil? || @site.new_record?
+      authenticate_user!
+    end
   end
 
   def current_site
@@ -83,8 +86,8 @@ class SitesController < ApplicationController
 
   protected
 
-    def find_site
-      @site = Site.find(params[:id])
-    end
+  def find_site
+    @site = Site.find(params[:id])
+  end
 
 end

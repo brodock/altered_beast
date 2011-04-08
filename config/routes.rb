@@ -1,6 +1,5 @@
 AlteredBeast::Application.routes.draw do
-  get '/session' => "sessions#create", :as => 'open_id_complete'
-
+  devise_for :users,  :controllers => { :registrations => 'registrations', :sessions => 'sessions' }
   resources :sites, :moderatorships, :monitorship
 
   resources :forums do
@@ -25,14 +24,7 @@ AlteredBeast::Application.routes.draw do
     end
   end
   match '/users/:user_id/monitored(.:format)' => 'posts#monitored', :as => 'monitored_posts'
-
-  match '/activate/:activation_code' => 'users#activate', :activation_code => nil, :as => 'activate'
-  match '/signup' => 'users#new', :as => 'signup'
   match '/settings' => 'users#settings', :as => 'settings'
-  match '/login' => 'sessions#new', :as => 'login'
-  match '/logout' => 'sessions#destroy', :as => 'logout'
-
-  resource  :session
 
   root :to => 'forums#index'
 end
