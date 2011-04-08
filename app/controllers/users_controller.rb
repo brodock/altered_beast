@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge, :edit]
   before_filter :find_user, :only => [:update, :show, :edit, :suspend, :unsuspend, :destroy, :purge]
-  before_filter :login_required, :only => [:settings, :update]
+  before_filter :authenticate_user!, :only => [:settings, :update]
 
   # Brainbuster Captcha
   # before_filter :create_brain_buster, :only => [:new]
@@ -13,25 +13,6 @@ class UsersController < ApplicationController
       @users = current_site.send(users_scope).named_like(params[:q]).paginate(:page => current_page)
     else
       @users = current_site.send(users_scope).paginate(:page => current_page)
-    end
-  end
-
-  # render new.rhtml
-  def new
-    @user = User.new
-  end
-
-  def create
-    cookies.delete :auth_token
-    @user = current_site.users.build(params[:user])    
-    @user.save if @user.valid?
-    @user.register! if @user.valid?
-    unless @user.new_record?
-      redirect_back_or_default('/login')
-      flash[:notice] = I18n.t 'txt.activation_required', 
-        :default => "Thanks for signing up! Please click the link in your email to activate your account"
-    else
-      render :action => 'new'
     end
   end
 
@@ -57,16 +38,6 @@ class UsersController < ApplicationController
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
-  end
-
-  def activate
-    # not sure why this was using a symbol. Let's use the real false.
-    self.current_user = params[:activation_code].blank? ? false : current_site.all_users.find_in_state(:first, :pending, :conditions => {:activation_code => params[:activation_code]})
-    if logged_in?
-      current_user.activate!
-      flash[:notice] = "Signup complete!"
-    end
-    redirect_back_or_default('/')
   end
 
   def suspend
@@ -110,8 +81,10 @@ protected
     end or raise ActiveRecord::RecordNotFound
   end
 
-  def authorized?
-    admin? || params[:id].blank? || params[:id] == current_user.id.to_s
+  def admin_required
+    unless admin? || params[:id].blank? || params[:id] == current_user.id.to_s
+      authenticate_user!
+    end
   end
 
   def render_or_redirect_for_captcha_failure

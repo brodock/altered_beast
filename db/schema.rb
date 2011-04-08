@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090317123901) do
+ActiveRecord::Schema.define(:version => 20110406071310) do
 
   create_table "brain_busters", :force => true do |t|
     t.string "question"
@@ -117,27 +117,30 @@ ActiveRecord::Schema.define(:version => 20090317123901) do
   create_table "users", :force => true do |t|
     t.string   "login"
     t.string   "email"
-    t.string   "crypted_password",          :limit => 40
-    t.string   "salt",                      :limit => 40
+    t.string   "encrypted_password",        :limit => 128, :default => "",        :null => false
+    t.string   "password_salt",                            :default => "",        :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
-    t.string   "activation_code",           :limit => 40
-    t.datetime "activated_at"
-    t.string   "state",                                   :default => "passive"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.string   "state",                                    :default => "passive"
     t.datetime "deleted_at"
-    t.boolean  "admin",                                   :default => false
+    t.boolean  "admin",                                    :default => false
     t.integer  "site_id"
     t.datetime "last_login_at"
     t.text     "bio_html"
     t.string   "openid_url"
     t.datetime "last_seen_at"
     t.string   "website"
-    t.integer  "posts_count",                             :default => 0
+    t.integer  "posts_count",                              :default => 0
     t.string   "bio"
     t.string   "display_name"
     t.string   "permalink"
+    t.datetime "confirmation_sent_at"
+    t.string   "reset_password_token"
+    t.datetime "remember_created_at"
   end
 
   add_index "users", ["last_seen_at"], :name => "index_users_on_last_seen_at"

@@ -1,5 +1,5 @@
-class User < ActiveRecord::Base
-  concerned_with :states, :activation, :posting, :validation
+class User < ActiveRecord::Base       
+  concerned_with :states, :posting, :validation, :authentication
   formats_attributes :bio
 
   belongs_to :site, :counter_cache => true

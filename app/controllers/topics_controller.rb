@@ -18,11 +18,11 @@ class TopicsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        if logged_in?
+        if user_signed_in?
           current_user.seen!
           (session[:topics] ||= {})[@topic.id] = Time.now.utc
         end
-        @topic.hit! unless logged_in? && @topic.user_id == current_user.id
+        @topic.hit! unless user_signed_in? && @topic.user_id == current_user.id
         @posts = @topic.posts.paginate :page => current_page
         @post  = Post.new
       end

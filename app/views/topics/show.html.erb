@@ -1,7 +1,7 @@
 <% @page_title = @topic.title %>
-<% @monitoring = logged_in? && !Monitorship.count(:id, :conditions => ['user_id = ? and topic_id = ? and active = ?', current_user.id, @topic.id, true]).zero? %>
+<% @monitoring = user_signed_in? && !Monitorship.count(:id, :conditions => ['user_id = ? and topic_id = ? and active = ?', current_user.id, @topic.id, true]).zero? %>
 
-<% if logged_in? %>
+<% if user_signed_in? %>
 
   <%= form_tag monitorship_path(@forum, @topic), :style => 'margin-top:0em; float:right;' do %>
   <div>
@@ -34,7 +34,7 @@
   <% if @topic.locked? %>
     <span>(<%= t 'txt.topic', :default => 'Topic' %> <%= t 'txt.locked', :default => 'locked' %>)</span>
   <% end %>
-  <% if logged_in? %>
+  <% if user_signed_in? %>
     <span style="display:none;" id="topic_mod">
       <% if @topic.editable_by?(current_user) %>
         <%= link_to(t('txt.edit', :default => 'edit'), edit_forum_topic_path(@forum, @topic), :class => "utility") %> |
@@ -90,7 +90,7 @@
         <span class="posts"><%= I18n.t 'txt.count_posts', :count => post.user.posts.size, :num => number_with_delimiter(post.user.posts.size) %></span>
     
     
-        <% if logged_in? && post.editable_by?(current_user) %>
+        <% if user_signed_in? && post.editable_by?(current_user) %>
         <p>
           <span class="edit">
             <%= ajax_spinner_for "edit-post-#{post.id}", "spinner_bounce.gif" %>
@@ -103,7 +103,7 @@
       </td>
       <td class="body entry-content" id="post-body-<%= post.id %>">
     
-        <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply', :title => t('txt.reply_to_topic', :default => "Reply to topic")), "$('reply').toggle()" if logged_in? && @posts.first == post %>
+        <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply', :title => t('txt.reply_to_topic', :default => "Reply to topic")), "$('reply').toggle()" if user_signed_in? && @posts.first == post %>
     
           <% if post.user.active? %>
             <%= post.body_html.html_safe %>
@@ -118,7 +118,7 @@
   <%= will_paginate @posts %>
 <% end %>
 
-<% if logged_in? %>
+<% if user_signed_in? %>
   <div id="edit"></div>
   <% if @topic.locked? %>
   
@@ -168,7 +168,7 @@ Event.observe(window, 'load', function() {
   $('topic-title').observe('mouseover', function(event) { $('topic_mod').show() });
   $('topic-title').observe('mouseout', function(event) { $('topic_mod').hide() });
 });
-<% end if logged_in? %>
+<% end if user_signed_in? %>
 
 <% content_for :right do %>
   <h5><%= I18n.t 'txt.voices', :default => 'Voices' %></h5>

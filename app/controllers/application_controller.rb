@@ -5,7 +5,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_page
   before_filter :set_language
-  before_filter :login_required, :only => [:new, :edit, :create, :update, :destroy]
+  before_filter :authenticate_user!, :only => [:new, :edit, :create, :update, :destroy]
+  before_filter :set_mailer_url_options
   
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -26,4 +27,7 @@ class ApplicationController < ActionController::Base
     I18n.locale = :'pt-BR' || I18n.default_locale
   end
 
+  def set_mailer_url_options
+    ActionMailer::Base.default_url_options[:host] = current_site.host
+  end
 end
