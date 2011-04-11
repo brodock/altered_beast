@@ -293,6 +293,7 @@
 
     # Global
     all: "todos"
+    admins_only: "Você precisa ser administrador para acessar este recurso"
     by_user: "por %{user}"
     by_user_html: "por %{user}"
     cancel: "Cancelar"

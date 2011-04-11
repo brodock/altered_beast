@@ -100,6 +100,7 @@
       even: "must be even"
 
   txt:
+    admins_only: "You need to be an administrator to access this resource"
     count_forums:
       zero: "no forum"
       one: "1 forum"
