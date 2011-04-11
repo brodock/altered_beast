@@ -1,5 +1,6 @@
 class SitesController < ApplicationController
   skip_before_filter :authenticate_user!
+  skip_before_filter :check_current_site
   before_filter :admin_required
 
   def index
@@ -77,8 +78,8 @@ class SitesController < ApplicationController
   end
   
   def admin_required
-    unless admin? || @site.nil? || @site.new_record?
-      authenticate_user!
+    unless admin? || Site.count == 0
+      access_denied
     end
   end
 end

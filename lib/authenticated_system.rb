@@ -16,8 +16,14 @@ module AuthenticatedSystem
     end
 
     def admin_required
-      flash[:error] = "Access denied for non admin users"
-      admin? || authenticate_user!
+      unless admin?
+        access_denied
+      end
+    end
+
+    def access_denied
+       flash[:error] = I18n.translate('txt.admins_only')
+       redirect_to root_path
     end
 
     # Store the URI of the current request in the session.
