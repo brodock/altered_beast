@@ -22,7 +22,7 @@ Devise.setup do |config|
   # session. If you need permissions, you should implement that in a before filter.
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
-  config.authentication_keys = [:login, :site_id]
+  config.authentication_keys = [:username, :site_id]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -34,7 +34,7 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
-  config.case_insensitive_keys = [:login]
+  config.case_insensitive_keys = [:username]
 
   # Tell if authentication through request.params is enabled. True by default.
   # config.params_authenticatable = true
@@ -66,7 +66,7 @@ Devise.setup do |config|
   # config.confirm_within = 2.days
 
   # Defines which key will be used when confirming an account
-  config.confirmation_keys = [ :login, :site_id ]
+  config.confirmation_keys = [ :username, :site_id ]
 
   # ==> Configuration for :rememberable
   # The time the user will be remembered without asking for credentials again.
@@ -120,7 +120,7 @@ Devise.setup do |config|
   # ==> Configuration for :recoverable
   #
   # Defines which key will be used when recovering the password for an account
-  config.reset_password_keys = [ :login, :site_id ]
+  config.reset_password_keys = [ :username, :site_id ]
 
   # ==> Configuration for :encryptable
   # Allow you to use another encryption algorithm besides bcrypt (default). You can use

@@ -30,7 +30,7 @@ steps_for(:user) do
   end
   
   Given "there is no $user_type user named '$login'" do |_, login|
-    @user = User.find_by_login(login)
+    @user = User.find_by_username(login)
     @user.destroy! if @user
     @user.should be_nil
   end
@@ -71,18 +71,18 @@ steps_for(:user) do
   Then "$login should be logged in" do |login|
     controller.logged_in?.should be_true
     controller.current_user.should === @user
-    controller.current_user.login.should == login
+    controller.current_user.username.should == login
   end
     
 end
 
-def named_user login
+def named_user username
   user_params = {
-    'admin'   => {'id' => 1, 'login' => 'addie', 'password' => '1234addie', 'email' => 'admin@example.com',       },
-    'oona'    => {          'login' => 'oona',   'password' => '1234oona',  'email' => 'unactivated@example.com'},
-    'reggie'  => {          'login' => 'reggie', 'password' => 'monkey',    'email' => 'registered@example.com' },
+    'admin'   => {'id' => 1, 'username' => 'addie', 'password' => '1234addie', 'email' => 'admin@example.com',       },
+    'oona'    => {          'username' => 'oona',   'password' => '1234oona',  'email' => 'unactivated@example.com'},
+    'reggie'  => {          'username' => 'reggie', 'password' => 'monkey',    'email' => 'registered@example.com' },
     }
-  user_params[login.downcase]
+  user_params[username.downcase]
 end
 
 #
@@ -107,7 +107,7 @@ end
 def create_user(user_params={})
   @user_params       ||= user_params
   post "/users", :user => user_params
-  @user = User.find_by_login(user_params['login'])
+  @user = User.find_by_username(user_params['username'])
 end
 
 def create_user!(user_type, user_params)
@@ -124,7 +124,7 @@ def log_in_user user_params=nil
   @user_params ||= user_params
   user_params  ||= @user_params
   post "/session", user_params
-  @user = User.find_by_login(user_params['login'])
+  @user = User.find_by_username(user_params['username'])
   controller.current_user
 end
 

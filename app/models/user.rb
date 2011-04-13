@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
 
   attr_readonly :posts_count, :last_seen_at
 
-  scope :named_like, lambda { |name| where("users.display_name like ? or users.login like ?", "#{name}%", "#{name}%") }
+  scope :named_like, lambda { |name| where("users.display_name like ? or users.username like ?", "#{name}%", "#{name}%") }
   scope :online, lambda { where("users.last_seen_at >= ?", 10.minutes.ago.utc) }
 
   class << self
@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
 
   def display_name
     n = read_attribute(:display_name)
-    n.blank? ? login : n
+    n.blank? ? username : n
   end
 
   alias_method :to_s, :display_name
@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
   end
 
   def to_param
-    id.to_s # permalink || login
+    id.to_s # permalink || username
   end
 
   def openid_url=(value)

@@ -22,13 +22,13 @@ namespace :app do
     say site.inspect
     puts
     
-    options = OpenStruct.new :login => 'admin', :password => nil, :email => 'admin@example.com'
+    options = OpenStruct.new :username => 'admin', :password => nil, :email => 'admin@example.com'
     say "Time to create your administrator account."
-    options.login = ask('Login:') {|q| q.default = options.login }
+    options.username = ask('Username:') {|q| q.default = options.username }
     options.password = ask('Password:') {|q| q.echo = '*' }
     options.email = ask('Email:') {|q| q.default = options.email }
     
-    user = site.all_users.build :login => options.login, :email => options.email
+    user = site.all_users.build :username => options.username, :email => options.email
     user.admin = true
     user.password = user.password_confirmation = options.password
     begin

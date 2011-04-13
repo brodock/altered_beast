@@ -37,10 +37,10 @@ module UsersHelper
   #
   # Link to user's page ('users/1')
   #
-  # By default, their login is used as link text and link title (tooltip)
+  # By default, their username is used as link text and link title (tooltip)
   #
   # Takes options
-  # * :content_text => 'Content text in place of user.login', escaped with
+  # * :content_text => 'Content text in place of user.username', escaped with
   #   the standard h() function.
   # * :content_method => :user_instance_method_to_call_for_content_text
   # * :title_method => :user_instance_method_to_call_for_title_attribute
@@ -52,7 +52,7 @@ module UsersHelper
   #
   #   # if you've added a .name attribute:
   #  content_tag :span, :class => :vcard do
-  #    (link_to_user user, :class => 'fn n', :title_method => :login, :content_method => :name) +
+  #    (link_to_user user, :class => 'fn n', :title_method => :username, :content_method => :name) +
   #          ': ' + (content_tag :span, user.email, :class => 'email')
   #   end
   #   # => <span class="vcard"><a href="/users/3" title="barmy" class="fn n">Cyril Fotheringay-Phipps</a>: <span class="email">barmy@blandings.com</span></span>
@@ -62,7 +62,7 @@ module UsersHelper
   #
   def link_to_user(user, options = {})
     raise "Invalid user" unless user
-    options.reverse_merge! :content_method => :login, :title_method => :login, :class => :nickname
+    options.reverse_merge! :content_method => :username, :title_method => :username, :class => :nickname
     content_text      = options.delete(:content_text)
     content_text    ||= user.send(options.delete(:content_method))
     options[:title] ||= user.send(options.delete(:title_method))

@@ -7,8 +7,8 @@ steps_for(:ra_resource) do
   
   #
   # Build a resource as described, store it as an @instance variable. Ex:
-  #   "Given a user with login: 'mojojojo'" 
-  # produces a User instance stored in @user with 'mojojojo' as its login
+  #   "Given a user with username: 'mojojojo'"
+  # produces a User instance stored in @user with 'mojojojo' as its username
   # attribute.
   #
   Given "a $resource instance with $attributes" do |resource, attributes|
@@ -170,7 +170,7 @@ end
 #
 # So, for instance,
 #   klass, instance = parse_resource_args 'user'
-#   instance = klass.new({login => 'me', password => 'monkey', ...})
+#   instance = klass.new({username => 'me', password => 'monkey', ...})
 #   keep_instance! resource, instance
 # keeps the just-constructed User model in the @user instance variable.
 #

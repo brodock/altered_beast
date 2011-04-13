@@ -10,7 +10,7 @@ describe SessionsController, "POST /create" do
       :options => {}}
   end
   
-  act! { post :create, @login[:options].merge(:login => users(@login[:user]).login, :password => @login[:pass]) }
+  act! { post :create, @login[:options].merge(:username => users(@login[:user]).username, :password => @login[:pass]) }
 
   # I think the session is broken. Or something.
   it_assigns :flash => {:notice => :not_nil}#, :session => {:user => :not_nil}

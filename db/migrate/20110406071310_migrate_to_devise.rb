@@ -17,6 +17,9 @@ class MigrateToDevise < ActiveRecord::Migration
     
     #rememberme related fields
     add_column :users, "remember_created_at", :datetime #additional field required for devise.
+
+    #renaming "login" to "username" to help other authenticatable devise plugins
+    rename_column :users, "login", "username"
   end
 
   def self.down
@@ -37,5 +40,8 @@ class MigrateToDevise < ActiveRecord::Migration
     change_column :users, "crypted_password", :string, :limit => 40
     rename_column :users, "password_salt", "salt" 
     change_column :users, "salt", :string, :limit => 40
+
+    #reset login field
+    rename_column :users, "username", "login"
   end
 end
