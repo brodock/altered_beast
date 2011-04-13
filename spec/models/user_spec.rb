@@ -15,7 +15,7 @@ describe User do
   
     it 'logs in with openid' do
       u = sites(:default).users.new(:openid_url => 'http://foo', :email => 'zoe@girl.com')
-      u.login = 'zoegirl'
+      u.username = 'zoegirl'
       assert u.valid?, u.errors.inspect
     end
 
@@ -28,7 +28,7 @@ describe User do
     end
   end
 
-  [:login, :password, :password_confirmation, :email, :site_id].each do |attr|
+  [:username, :password, :password_confirmation, :email, :site_id].each do |attr|
     it "requires #{attr}" do
       lambda do
         u = create_user attr => nil
@@ -44,9 +44,9 @@ describe User do
     u.bio_html.should == '<p>foo</p>'
   end
   
-  it "sets User#display_name from login if nil" do
-    user = User.new :login => 'foo'
-    user.display_name.should == user.login
+  it "sets User#display_name from username if nil" do
+    user = User.new :username => 'foo'
+    user.display_name.should == user.username
   end
   
   it "#seen! sets #last_seen_at" do
@@ -58,16 +58,16 @@ describe User do
 
   it 'resets password' do
     users(:default).update_attributes(:password => 'new password', :password_confirmation => 'new password')
-    User.authenticate(users(:default).login, 'new password').should == users(:default)
+    User.authenticate(users(:default).username, 'new password').should == users(:default)
   end
 
   it 'does not rehash password' do
-    users(:default).update_attributes(:login => users(:default).login.reverse)
-    User.authenticate(users(:default).login, 'test').should == users(:default)
+    users(:default).update_attributes(:username => users(:default).username.reverse)
+    User.authenticate(users(:default).username, 'test').should == users(:default)
   end
 
   it 'authenticates user' do
-    User.authenticate(users(:default).login, 'test').should == users(:default)
+    User.authenticate(users(:default).username, 'test').should == users(:default)
   end
 
   it 'sets remember token' do
@@ -133,7 +133,7 @@ describe User do
 
 protected
   def create_user(options = {})
-    User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'monkey', :password_confirmation => 'monkey' }.merge(options)).tap do |u|
+    User.new({ :username => 'quire', :email => 'quire@example.com', :password => 'monkey', :password_confirmation => 'monkey' }.merge(options)).tap do |u|
       u.site_id = options.key?(:site_id) ? options[:site_id] : sites(:default).id
       u.save
     end
@@ -161,8 +161,8 @@ describe User, "with no created users" do
     model User
   end
 
-  def make_user(site, login, email)
-    user = User.new :login => login, :email => email, :password => 'monkey', :password_confirmation => 'monkey'
+  def make_user(site, username, email)
+    user = User.new :username => username, :email => email, :password => 'monkey', :password_confirmation => 'monkey'
     user.site_id = site.id
     # user.stub!(:site).and_return @site
     user.save!

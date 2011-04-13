@@ -12,8 +12,8 @@ describe UsersController do
 
   it 'requires login on signup' do
     lambda do
-      create_user(:login => nil)
-      assigns[:user].errors.on(:login).should_not be_nil
+      create_user(:username => nil)
+      assigns[:user].errors.on(:username).should_not be_nil
       response.should be_success
     end.should_not change(User, :count)
   end
@@ -43,10 +43,10 @@ describe UsersController do
   end
   
   it 'activates user' do
-    sites(:default).users.authenticate(users(:pending).login, 'test').should be_nil
+    sites(:default).users.authenticate(users(:pending).username, 'test').should be_nil
     get :activate, :activation_code => users(:pending).activation_code
     response.should redirect_to('/')
-    sites(:default).users.authenticate(users(:pending).login, 'test').should == users(:pending)
+    sites(:default).users.authenticate(users(:pending).username, 'test').should == users(:pending)
     flash[:notice].should_not be_nil
   end
   
@@ -63,7 +63,7 @@ describe UsersController do
   it 'activates the first user as admin' do
     User.delete_all
     create_user
-    user = User.find_by_login('quire')
+    user = User.find_by_username('quire')
     user.register!
     user.activate!
     user.active?.should == true
@@ -71,13 +71,13 @@ describe UsersController do
   end
   
   it "sends an email to the user on create" do
-    create_user :login => "admin", :email => "admin@example.com"
+    create_user :username => "admin", :email => "admin@example.com"
     response.should be_redirect
     lambda{ create_user }.should change(ActionMailer::Base.deliveries, :size).by(1)
   end
   
   def create_user(options = {})
-    post :create, :user => { :login => 'quire', :email => 'quire@example.com',
+    post :create, :user => { :username => 'quire', :email => 'quire@example.com',
       :password => 'monkey', :password_confirmation => 'monkey' }.merge(options)
   end
 end
@@ -101,9 +101,9 @@ describe UsersController, "GET #index" do
     act! { get :index, :q => "bob" }
     define_models do
       model User do
-        stub :bob, :display_name => "Bob", :login => "robert"
-        stub :rob, :display_name => "Robert", :login => "bob" 
-        stub :robby, :display_name => "Robby", :login => "robby"
+        stub :bob, :display_name => "Bob", :username => "robert"
+        stub :rob, :display_name => "Robert", :username => "bob"
+        stub :robby, :display_name => "Robby", :username => "robby"
       end
     end
     it "should find users by name" do
@@ -125,7 +125,7 @@ describe UsersController, "PUT #make_admin" do
   before do
     login_as :admin
     current_site :default
-    @attributes = {'login' => "Default"}
+    @attributes = {'username' => "Default"}
   end
   
   describe UsersController, "(as admin, successful)" do
@@ -153,7 +153,7 @@ describe UsersController, "PUT #update" do
   before do
     login_as :default
     current_site :default
-    @attributes = {'login' => "Default"}
+    @attributes = {'username' => "Default"}
   end
   
   describe UsersController, "(successful save)" do

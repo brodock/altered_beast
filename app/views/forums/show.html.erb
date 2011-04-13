@@ -86,7 +86,7 @@
   <% unless @forum.moderators.empty? -%>
     <ul class="flat" style="margin-top:1em;">
     <% @forum.moderators.each do |user| %>
-      <li><%= link_to h(user.display_name || user.login), user %></li>
+      <li><%= link_to h(user.display_name || user.username), user %></li>
     <% end %>
     </ul>
   <% else %>

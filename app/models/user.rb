@@ -18,12 +18,12 @@ class User < ActiveRecord::Base
   has_many :monitorships, :dependent => :delete_all
   has_many :monitored_topics, :through => :monitorships, :source => :topic, :conditions => {"#{Monitorship.table_name}.active" => true}
   
-  has_permalink :login, :scope => :site_id
+  has_permalink :username, :scope => :site_id
   
   attr_readonly :posts_count, :last_seen_at
 
   scope :named_like, lambda {|name|
-    { :conditions => ["users.display_name like ? or users.login like ?", 
+    { :conditions => ["users.display_name like ? or users.username like ?",
                         "#{name}%", "#{name}%"] }}
 
   def self.prefetch_from(records)
@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
 
   def display_name
     n = read_attribute(:display_name)
-    n.blank? ? login : n
+    n.blank? ? username : n
   end
 
   alias_method :to_s, :display_name
@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
   end
   
   def to_param
-    id.to_s # permalink || login
+    id.to_s # permalink || username
   end
 
   def openid_url=(value)

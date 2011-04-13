@@ -14,7 +14,7 @@ steps_for(:ra_navigation) do
 
   # POST -- Ex:
   #   When she creates a book with ISBN: '0967539854' and comment: 'I love this book' and rating: '4'
-  #   When she creates a singular session with login: 'reggie' and password: 'i_haxxor_joo'
+  #   When she creates a singular session with username: 'reggie' and password: 'i_haxxor_joo'
   # Since I'm not smrt enough to do it right, explicitly specify singular resources
   When %r{$actor creates an? $resource with $attributes} do |actor, resource, attributes|
     attributes = attributes.to_hash_from_story

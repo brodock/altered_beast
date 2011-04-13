@@ -58,7 +58,7 @@ describe Forum, "#moderators" do
   define_models :moderators
 
   it "finds moderators for forum" do
-    forums(:default).moderators.sort_by(&:login).should == [users(:default), users(:other)]
+    forums(:default).moderators.sort_by(&:username).should == [users(:default), users(:other)]
     forums(:other).moderators.should == [users(:default)]
   end
 end

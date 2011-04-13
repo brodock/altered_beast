@@ -237,9 +237,9 @@
     views_users:
       admin_in_parens: "(administrador)"
       current_status_title: "Status"
-      display_name_or_login: "Nome de exibição ou login"
+      display_name_or_login: "Nome de exibição ou usuário"
       find_a_user: "Localize um usuário"
-      name_or_login: "Nome / Login"
+      name_or_login: "Nome / Usuário"
       posts_title: "Mensagens"
       search_title: "Buscar"
       view_all_monitored_posts_html: "(ver %{all_link} | mensagens %{monitored_link})"
