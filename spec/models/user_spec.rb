@@ -131,6 +131,11 @@ describe User do
     users(:default).should be_deleted
   end
 
+  it 'finds currently online users' do
+    user = users(:default)
+    user.seen!
+    User.online.find_by_id(user.id).should_not be_nil
+  end
 protected
   def create_user(options = {})
     User.new({ :username => 'quire', :email => 'quire@example.com', :password => 'monkey', :password_confirmation => 'monkey' }.merge(options)).tap do |u|

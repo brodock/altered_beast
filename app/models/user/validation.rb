@@ -11,31 +11,31 @@ class User
   validates_uniqueness_of   :username, :email, :scope => :site_id
 
   before_create :set_first_user_as_admin
-  # validates_email_format_of :email, :message=>"is invalid"  
+  # validates_email_format_of :email, :message=>"is invalid"
   validates_uniqueness_of :openid_url, :case_sensitive => false, :allow_nil => true
 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :username, :email, :bio, :password, :password_confirmation,
-    :openid_url, :display_name, :website, :remember_me, :site_id
+  attr_accessible :username, :email, :password, :password_confirmation, :bio,
+    :openid_url, :display_name, :website, :remember_me
 
-protected    
+  protected
+    
   def using_openid
     self.openid_url.blank? ? false : true
   end
     
   def password_required?
     return false if using_openid
-    encrypted_password.blank? || !password.blank?
+    encrypted_password.blank? || password.present?
   end
   
   def set_first_user_as_admin
-    self.admin = true if site and site.users.size.zero?
+    self.admin = true if site && site.users.size.zero?
   end
   
   def normalize_username_and_email
-    username.downcase! if username
-    username.strip! if username
+    username.downcase! && username.strip! if username
     email.downcase! if email
     return true
   end

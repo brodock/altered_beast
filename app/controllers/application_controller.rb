@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
 
   helper_method :current_page
-  before_filter :set_language
-  before_filter :check_current_site
   before_filter :authenticate_user!, :only => [:new, :edit, :create, :update, :destroy]
   before_filter :set_mailer_url_options
   
@@ -17,22 +15,14 @@ class ApplicationController < ActionController::Base
   rescue_from Site::UndefinedError do |e|
     redirect_to new_site_path
   end
-  
+
   def current_page
-    @page ||= params[:page].blank? ? 1 : params[:page].to_i
+    @page ||= [1, params[:page].to_i].max
   end
 
   private
 
-  def set_language
-    I18n.locale = :'pt-BR' || I18n.default_locale
-  end
-
-  def check_current_site
-    current_site
-  end
-
   def set_mailer_url_options
-    ActionMailer::Base.default_url_options[:host] = request.domain
+    ActionMailer::Base.default_url_options[:host] = current_site.host
   end
 end

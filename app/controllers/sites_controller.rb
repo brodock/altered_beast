@@ -2,6 +2,7 @@ class SitesController < ApplicationController
   skip_before_filter :authenticate_user!
   skip_before_filter :check_current_site
   before_filter :admin_required
+  before_filter :find_site, :only => [:show, :edit, :update, :destroy]
 
   def index
     @sites = Site.paginate(:all, :page => current_page, :order => 'host ASC')
@@ -13,7 +14,6 @@ class SitesController < ApplicationController
   end
 
   def show
-    @site = Site.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -31,7 +31,6 @@ class SitesController < ApplicationController
   end
 
   def edit
-    @site = Site.find(params[:id])
   end
 
   def create
@@ -53,7 +52,6 @@ class SitesController < ApplicationController
   end
 
   def update
-    @site = Site.find(params[:id])
 
     respond_to do |format|
       if @site.update_attributes(params[:site])
@@ -68,7 +66,6 @@ class SitesController < ApplicationController
   end
 
   def destroy
-    @site = Site.find(params[:id])
     @site.destroy
 
     respond_to do |format|
@@ -82,4 +79,16 @@ class SitesController < ApplicationController
       access_denied
     end
   end
+
+  def current_site
+    @current_site ||= Site.find_by_host(request.host.dup)
+  end
+  helper_method :current_site
+
+  protected
+
+  def find_site
+    @site = Site.find(params[:id])
+  end
+
 end

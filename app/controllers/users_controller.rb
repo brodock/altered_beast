@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     current_site
     render :action => "edit"
   end
-  
+
   def edit
     @user = find_user
   end
@@ -61,7 +61,7 @@ class UsersController < ApplicationController
     @user.destroy
     redirect_to users_path
   end
-  
+
   def make_admin
     redirect_back_or_default('/') and return unless admin?
     @user = find_user
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
     redirect_to @user
   end
 
-protected
+  protected
   def find_user
     @user = if admin?
       current_site.all_users.find params[:id]
